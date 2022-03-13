@@ -2,33 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "includes/parser.h"
+#include "includes/dbManager.h"
+#include "includes/execute.h"
 #include <stdint.h>
 #include <fcntl.h>
 
-typedef struct 
-{
-    char* buffer;
-    size_t buffer_lenght;
-    ssize_t input_lenght;
-} InputBuffer;
+
 
 typedef enum {
   META_COMMAND_SUCCESS,
   META_COMMAND_UNRECOGNIZED_COMMAND
 } MetaCommandResult;
-
-
-
-InputBuffer* new_input_buffer() {
-  InputBuffer* input_buffer = malloc(sizeof(InputBuffer));
-  input_buffer->buffer = NULL;
-  input_buffer->buffer_lenght = 0;
-  input_buffer->input_lenght = 0;
-
-  return input_buffer;
-}
-
 
 
 void promt() {
@@ -47,6 +31,14 @@ void read_input(InputBuffer* input_buffer) {
     input_buffer->input_lenght = bytes - 1;
     input_buffer->buffer[bytes - 1] = 0;
 }
+InputBuffer* new_input_buffer() {
+  InputBuffer* input_buffer = malloc(sizeof(InputBuffer));
+  input_buffer->buffer = NULL;
+  input_buffer->buffer_lenght = 0;
+  input_buffer->input_lenght = 0;
+
+  return input_buffer;
+}
 
 void close_input_buffer(InputBuffer* input_buffer) {
     free(input_buffer->buffer);
@@ -59,17 +51,16 @@ MetaCommandResult execute_command(InputBuffer* input_buffer) {
         exit(EXIT_SUCCESS);
     }if(strstr(input_buffer->buffer, "create") != NULL){
         create(input_buffer->buffer);
+        return META_COMMAND_SUCCESS;
         
     }if(strstr(input_buffer->buffer, "connect") != NULL){
         pager = connect(input_buffer->buffer);
-    }if(strstr(input_buffer->buffer, "insert") != NULL){
-        test(pager->file_descriptor, input_buffer->buffer);
-    }
-    else {
+        return META_COMMAND_SUCCESS;
+    }else {
         return META_COMMAND_UNRECOGNIZED_COMMAND;
     }
 }
-
+Statement statement;
 int main(int argc, char **argv[]) {
     InputBuffer* input_buffer = new_input_buffer();
     while (true){
@@ -77,9 +68,18 @@ int main(int argc, char **argv[]) {
         read_input(input_buffer);
         switch (execute_command(input_buffer)) {
             case (META_COMMAND_SUCCESS):
-                continue;
+                break;
             case (META_COMMAND_UNRECOGNIZED_COMMAND):
-                parser(input_buffer->buffer);
+                switch (prepare_statement(input_buffer, &statement))
+                {
+                    case (PREPARE_SUCCESS):
+                        break;
+                    case(PREPARE_UNRECOGNIZED_STATEMENT):
+                        printf("this sql statement %s does not exist \n", input_buffer->buffer);
+                        continue;
+                }
+                execute(&statement);
+                printf("Executed \n");
                 continue;
         }
         

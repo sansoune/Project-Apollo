@@ -1,5 +1,4 @@
 #include <stdint.h>
-void parser(char* command);
 void create(char* string);
 
 typedef struct {
@@ -9,4 +8,3 @@ typedef struct {
 } Pager;
 
 Pager* connect(char* connecti);
-void test(int fd, char* striing);
