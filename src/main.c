@@ -3,7 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 #include "includes/parser.h"
-
+#include <stdint.h>
+#include <fcntl.h>
 
 typedef struct 
 {
@@ -28,6 +29,8 @@ InputBuffer* new_input_buffer() {
   return input_buffer;
 }
 
+
+
 void promt() {
     printf("Apollo > ");
 }
@@ -50,12 +53,17 @@ void close_input_buffer(InputBuffer* input_buffer) {
     free(input_buffer);
 }
 
+Pager* pager;
 MetaCommandResult execute_command(InputBuffer* input_buffer) {
     if(strcmp(input_buffer->buffer, "exit") == 0) {
         exit(EXIT_SUCCESS);
     }if(strstr(input_buffer->buffer, "create") != NULL){
         create(input_buffer->buffer);
         
+    }if(strstr(input_buffer->buffer, "connect") != NULL){
+        pager = connect(input_buffer->buffer);
+    }if(strstr(input_buffer->buffer, "insert") != NULL){
+        test(pager->file_descriptor, input_buffer->buffer);
     }
     else {
         return META_COMMAND_UNRECOGNIZED_COMMAND;
