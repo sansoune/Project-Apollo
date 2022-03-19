@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#include "execute.h"
+#include "../h/execute.h"
 
 void execute(Statement*  statement) {
     switch (statement->type)

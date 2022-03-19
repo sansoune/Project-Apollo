@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "includes/dbManager.h"
-#include "includes/execute.h"
+#include "includes/h/dbManager.h"
+#include "includes/h/execute.h"
 #include <stdint.h>
 #include <fcntl.h>
 
@@ -53,8 +53,12 @@ MetaCommandResult execute_command(InputBuffer* input_buffer) {
         create(input_buffer->buffer);
         return META_COMMAND_SUCCESS;
         
-    }if(strstr(input_buffer->buffer, "connect") != NULL){
+    }if(strncmp(input_buffer->buffer, "connect", 7) == 0){
         pager = connect(input_buffer->buffer);
+        // read_meta();
+        return META_COMMAND_SUCCESS;
+    }if(strncmp(input_buffer->buffer, "disconnect", 10) == 0) {
+        disconnect(pager);
         return META_COMMAND_SUCCESS;
     }else {
         return META_COMMAND_UNRECOGNIZED_COMMAND;

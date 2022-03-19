@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "dbManager.h"
+#include "../h/dbManager.h"
 
 
 
@@ -24,7 +24,7 @@ Pager* connect(char* connecti) {
         Pager* pager = malloc(sizeof(Pager));
         pager->file_descriptor = fd;
         pager->file_length = 1000;
-        printf("connected to db yassine \n");
+        printf("connected to db %s \n", connecti);
         return pager;
     }else {
         printf("file does not exist please create it \n");
