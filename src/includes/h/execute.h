@@ -22,7 +22,7 @@ typedef struct
     char email[COLUMN_EMAIL_SIZE];
 } Row;
 
-// void read_meta();
+char* read_meta(const char* path);
 
 
 typedef struct {
