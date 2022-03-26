@@ -5,7 +5,8 @@ build: clear
 	gcc -o ./dist/Apollo ./src/main.c ${CFiles}
 
 test:
-	gcc -o ./dist/test ./src/test.c
+
+	gcc -o ./dist/test ./src/Test.c ./src/includes/c/readfile.c
 	./dist/test
 
 clear:
