@@ -3,6 +3,21 @@
 #include <stdio.h>
 
 typedef enum { PREPARE_SUCCESS, PREPARE_SYNTAX_ERROR, PREPARE_UNRECOGNIZED_STATEMENT } PrepareResult;
+
+
+typedef enum {
+    VARCHAR,
+    TEXT,
+    BINARY,
+    IMAGE,
+    VIDEO,
+    FLOAT,
+    INT,
+    DATE,
+    TIME,
+    BOOL
+} ParserType;
+
 typedef struct 
 {
     char* buffer;
@@ -18,11 +33,11 @@ typedef enum { STATEMENT_INSERT, STATEMENT_SELECT } StatementType;
 typedef struct 
 {
     uint32_t id;
-    char username[COLUMN_USERNAME_SIZE];
-    char email[COLUMN_EMAIL_SIZE];
+    
 } Row;
 
 char* read_meta(const char* path);
+ParserType parse_meta(char* input);
 
 
 typedef struct {
