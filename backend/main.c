@@ -9,7 +9,7 @@
 
 #define PORT 5000
 #define MAX_CLIENTS 10
-#define BUFFER 1024
+#define BUFFER 1000000
 
 
 struct apollo_request

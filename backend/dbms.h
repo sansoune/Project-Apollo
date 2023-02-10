@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// #define MAX_FILE_SIZE 1000000000 // 1 GB
-#define MAX_FILE_SIZE 4000 // 1 GB
+#define MAX_FILE_SIZE 1000000000 // 1 GB
+// #define MAX_FILE_SIZE 4000 // 1 GB
 #define MAX_TEXT_LENGTH 100000
 #define MAX_TOPIC_LENGTH 100
 #define MAX_INTENTION_LENGTH 100

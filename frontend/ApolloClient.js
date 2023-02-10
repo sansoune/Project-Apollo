@@ -1,7 +1,7 @@
 const net = require('net');
 
 const PORT = 5000;
-const BUFFER_SIZE = 1024;
+const BUFFER_SIZE = 1000000;
 
 class ApolloRequest {
   constructor(type, resource, data) {
