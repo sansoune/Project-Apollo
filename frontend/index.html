@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apollo DB</title>
+</head>
+<body>
+    <h1>test 123</h1>
+    <form action="/form" method="post" name="database-form">
+        <input type="text" name="data" id="data">
+        <select name="topic" id="topics">
+            <option value="topic1">topic1</option>
+            <option value="topic2">topic2</option>
+            <option value="topic3">topic3</option>
+        </select>
+        <select name="intention" id="intention">
+            <option value="happy">happy</option>
+            <option value="nutral">nutral</option>
+            <option value="sad">sad</option>
+        </select>
+        <input type="submit" value="submit">
+    </form>
+    <script>
+        document.addEventListener("submit", () => {
+            document.database-form.reset()
+        })
+    </script>
+</body>
+</html>
