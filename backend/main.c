@@ -4,7 +4,6 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-#include <jansson.h>
 #include "dbms.h"
 
 #define PORT 5000
@@ -27,14 +26,18 @@ struct apollo_response
     int code;
 };
 
-int Post_method(DataRecord record) {
-    int result = insert_data("database/data", &record);
+FieldInfo *fields;
+int field_count;
+
+int Post_method(const char *data) {
+    int result = insert_data("database/data", fields, field_count, data);
     if (result == 1) {
         printf("Failed to insert data.");
         return 1;
     }
 
     printf("Data inserted successfully.");
+    free(fields);
     return 0;
 }
 
@@ -67,21 +70,21 @@ void *handle_connection(void* p_client_socket) {
                     printf("Error parsing JSON: on line %d: %s\n", error.line, error.text);
                     return NULL;
                 }
-                json_t *data = json_object_get(root, "data");
-                json_t *topic = json_object_get(root, "topic");
-                json_t *intention = json_object_get(root, "intention");
-
-
-                DataRecord record;
-                strcpy(record.text, json_string_value(data));
-                strcpy(record.topic, json_string_value(topic));
-                strcpy(record.intention, json_string_value(intention));
-
-                printf("%s %s %s", record.text, record.topic, record.intention);
-
+                const char* key;
+                json_t *value;
+                char string[1024];
+                int offset = 0;
+                json_object_foreach(root, key, value) {
+                     if (json_is_string(value)) {
+                        offset += snprintf(string + offset, 1024 - offset, "%s,", json_string_value(value));
+                    } else if (json_is_integer(value)) {
+                        offset += snprintf(string + offset, 1024 - offset, "%lld,", json_integer_value(value));
+                    }
+                }
+                string[offset - 1] = '\0';
+                printf("test : %s", string);
                 json_decref(root);
-                
-                Post_method(record);
+                Post_method(string);
             }
             response.status = 'K';
             response.code = 601;
@@ -103,6 +106,9 @@ void *handle_connection(void* p_client_socket) {
 int main(int argc, char **argv[]) {
     int server_socket, client_socket;
     struct sockaddr_in server, client;
+
+    
+    read_meta("test.meta", &fields, &field_count);
 
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if(server_socket < 0) {

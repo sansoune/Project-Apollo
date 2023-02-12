@@ -4,6 +4,7 @@ const path = require("path")
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('./'))
 
 const client = new ApolloClient();
 client.connect(5000, '127.0.0.1')

@@ -3,3 +3,6 @@ dbms
 server
 /database
 /frontend/node_modules
+client_code.c
+client
+test
